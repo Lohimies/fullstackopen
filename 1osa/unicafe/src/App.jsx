@@ -30,14 +30,6 @@ const App = () => {
 }
 
 const Statistics = ({goodCount, neutralCount, badCount}) => {
-  
-  const Stat = ({name, count}) => {
-    return (
-      <div>
-        {name} {count}
-      </div>
-    )
-  }
 
   const SumStat = ({goodCount, neutralCount, badCount}) => {
     const sum = goodCount + neutralCount + badCount
@@ -65,12 +57,6 @@ const Statistics = ({goodCount, neutralCount, badCount}) => {
       </div>
     )
   }
-
-  const Sum = ({int1, int2, int3}) => {int1+int2+int3}
-
-  const Average = ({int1, int2, int3}) => {(int1+int2+int3)/3}
-
-  const Positive = ({pos, neut, neg}) => {pos/(pos+neut+neg)}
 
   return (
     <div>
