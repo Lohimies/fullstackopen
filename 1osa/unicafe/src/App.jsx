@@ -57,10 +57,17 @@ const Statistics = ({goodCount, neutralCount, badCount}) => {
       </div>
     )
   }
-
-  return (
+  if ((goodCount+neutralCount+badCount) === 0) {
+    return (
+      <div>
+        <h2>Statistics</h2>
+        <p>No feedback given.</p>
+      </div>
+    )
+  }
+  return(
     <div>
-      <h2>statistics</h2>
+      <h2>Statistics</h2>
       <div>good: {goodCount}</div>
       <div>neutral: {neutralCount}</div>
       <div>bad: {badCount}</div>
