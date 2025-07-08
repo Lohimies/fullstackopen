@@ -24,10 +24,60 @@ const App = () => {
       <button onClick={handleGoodClick}>good</button>
       <button onClick={handleNeutralClick}>neutral</button>
       <button onClick={handleBadClick}>bad</button>
+      <Statistics goodCount={goodCount} neutralCount={neutralCount} badCount={badCount}></Statistics>
+    </div>
+  )
+}
+
+const Statistics = ({goodCount, neutralCount, badCount}) => {
+  
+  const Stat = ({name, count}) => {
+    return (
+      <div>
+        {name} {count}
+      </div>
+    )
+  }
+
+  const SumStat = ({goodCount, neutralCount, badCount}) => {
+    const sum = goodCount + neutralCount + badCount
+    return (
+      <div>
+        sum of all: {sum}
+      </div>
+    )
+  }
+
+  const AverageStat = ({goodCount, neutralCount, badCount}) => {
+    const average = (goodCount - badCount)/(goodCount + neutralCount + badCount)
+    return (
+      <div>
+        average of scores: {average}
+      </div>
+    )
+  }
+
+  const PositivesStat = ({goodCount, neutralCount, badCount}) => {
+    const percentage = goodCount/(goodCount + neutralCount + badCount)
+    return (
+      <div>
+        percentage of positives: {percentage}
+      </div>
+    )
+  }
+
+  const Sum = ({int1, int2, int3}) => {int1+int2+int3}
+
+  const Average = ({int1, int2, int3}) => {(int1+int2+int3)/3}
+
+  const Positive = ({pos, neut, neg}) => {pos/(pos+neut+neg)}
+
+  return (
+    <div>
       <h2>statistics</h2>
-      <Stat name='good:' count={goodCount} ></Stat>
-      <Stat name='neutral:' count={neutralCount}></Stat>
-      <Stat name='bad:' count={badCount}></Stat>
+      <div>good: {goodCount}</div>
+      <div>neutral: {neutralCount}</div>
+      <div>bad: {badCount}</div>
       <SumStat goodCount={goodCount} neutralCount={neutralCount} badCount={badCount}></SumStat>
       <AverageStat goodCount={goodCount} neutralCount={neutralCount} badCount={badCount}></AverageStat>
       <PositivesStat goodCount={goodCount} neutralCount={neutralCount} badCount={badCount}></PositivesStat>
@@ -35,46 +85,7 @@ const App = () => {
   )
 }
 
-const Stat = ({name, count}) => {
-  return (
-    <div>
-      {name} {count}
-    </div>
-  )
-}
 
-const SumStat = ({goodCount, neutralCount, badCount}) => {
-  const sum = goodCount + neutralCount + badCount
-  return (
-    <div>
-      sum of all: {sum}
-    </div>
-  )
-}
-
-const AverageStat = ({goodCount, neutralCount, badCount}) => {
-  const average = (goodCount + neutralCount + badCount)/3
-  return (
-    <div>
-      average of scores: {average}
-    </div>
-  )
-}
-
-const PositivesStat = ({goodCount, neutralCount, badCount}) => {
-  const percentage = goodCount/(goodCount + neutralCount + badCount)
-  return (
-    <div>
-      percentage of positives: {percentage}
-    </div>
-  )
-}
-
-const Sum = ({int1, int2, int3}) => {int1+int2+int3}
-
-const Average = ({int1, int2, int3}) => {(int1+int2+int3)/3}
-
-const Positive = ({pos, neut, neg}) => {pos/(pos+neut+neg)}
 
 
 export default App
