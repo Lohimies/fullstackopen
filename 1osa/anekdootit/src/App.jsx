@@ -1,6 +1,8 @@
 import { useState } from 'react'
 
 const App = () => {
+  const debugVal = 0
+
   const anecdotes = [
     'If it hurts, do it more often.',
     'Adding manpower to a late software project makes it later!',
@@ -28,8 +30,10 @@ const App = () => {
     const highestIndex = newVotes.indexOf(maxVotes)
     setHighest(highestIndex)
 
-    console.log(highestVotes)
-    console.log(newVotes)
+    if (debugVal) {
+      console.log(highestVotes)
+      console.log(newVotes)
+    }
   }
 
   
