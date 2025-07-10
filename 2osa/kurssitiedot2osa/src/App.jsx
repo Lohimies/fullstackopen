@@ -64,9 +64,10 @@ const Part = (props) => {
 }
 
 const Total = ({course}) => {
-  console.log('Total', course)
+  const exercisesArray = course.parts.map((part) => part.exercises)
+  console.log('Total', exercisesArray)
   return (
-    <p>Total number of exercises: {course.parts[0].exercises + course.parts[1].exercises + course.parts[2].exercises}</p>
+    <p>Total number of exercises: {exercisesArray.reduce((sum, currentVal) => sum + currentVal)}</p>
   )
 }
 
