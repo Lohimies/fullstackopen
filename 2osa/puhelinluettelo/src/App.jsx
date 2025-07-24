@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
-import PhonebookWithFilter from './components/PhonebookWithFilter'
+import PhonebookFilter from './components/PhonebookFilter'
 import AddPerson from './components/AddPerson'
 import dbHandling from './services/dbHandling'
+import PhonebookPeople from './components/PhonebookPeople'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -26,12 +26,19 @@ const App = () => {
     else {
       dbHandling
       .create({name: newName, number: newNumber})
-      .then(addedPerson => setPersons(persons.concat(addedPerson)))
+      .then(addedPerson => {
+        setPersons(persons.concat(addedPerson))
+        console.log('Added a person successfully', addedPerson)
+        }
+      )
+      .catch(error => console.error('Error adding person', error))
     }
 
     setNewName('')
     setNewNumber('')
   }
+
+  
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
@@ -48,7 +55,8 @@ const App = () => {
     <div>
       <h1>Phonebook</h1>
       <AddPerson addPerson={addPerson} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange}></AddPerson>
-      <PhonebookWithFilter namesFilter={namesFilter} persons={persons} handleFilterChange={handleFilterChange}></PhonebookWithFilter>
+      <PhonebookFilter namesFilter={namesFilter} handleFilterChange={handleFilterChange}></PhonebookFilter>
+      <PhonebookPeople namesFilter={namesFilter} persons={persons} setPersons={setPersons}></PhonebookPeople>
     </div>
   )
 
