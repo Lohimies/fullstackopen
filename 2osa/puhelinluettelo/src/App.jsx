@@ -21,7 +21,17 @@ const App = () => {
     const personArray = Array.from(persons, (person) => person.name)
     
     if (personArray.includes(newName)) {
-      alert(`${newName} is already added to phonebook`) 
+      if (window.confirm(`${newName} already exist in the phonebook. Do you want to change the number on this entry?`)) {
+        const person = persons.find((n) => n.name === newName)
+        const changedPerson = {...person, number: newNumber}
+        dbHandling.update(person.id, changedPerson)
+          .then(changedData => {
+            console.log('number changed successfully:', changedData)
+            setPersons(persons.map((person) => person.id === changedData.id ? changedData : person))
+            }
+          )
+          .catch(error => console.error('Error in changing the number in:', error))
+      }
     }
     else {
       dbHandling
