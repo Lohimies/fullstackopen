@@ -3,12 +3,15 @@ import PhonebookFilter from './components/PhonebookFilter'
 import AddPerson from './components/AddPerson'
 import dbHandling from './services/dbHandling'
 import PhonebookPeople from './components/PhonebookPeople'
+import Notification from './components/Notification/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [namesFilter, setFilter] = useState('')
+  const [displayMessage, setDisplayMessage] = useState(null)
+  
 
   useEffect(() => {
     dbHandling
@@ -38,7 +41,10 @@ const App = () => {
       .create({name: newName, number: newNumber})
       .then(addedPerson => {
         setPersons(persons.concat(addedPerson))
-        console.log('Added a person successfully', addedPerson)
+        setDisplayMessage(`${addedPerson.name} successfully added to phonebook`)
+        setTimeout(() => {
+          setDisplayMessage(null)
+          }, 5000)
         }
       )
       .catch(error => console.error('Error adding person', error))
@@ -65,6 +71,7 @@ const App = () => {
     <div>
       <h1>Phonebook</h1>
       <AddPerson addPerson={addPerson} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange}></AddPerson>
+      <Notification message={displayMessage}/>
       <PhonebookFilter namesFilter={namesFilter} handleFilterChange={handleFilterChange}></PhonebookFilter>
       <PhonebookPeople namesFilter={namesFilter} persons={persons} setPersons={setPersons}></PhonebookPeople>
     </div>
