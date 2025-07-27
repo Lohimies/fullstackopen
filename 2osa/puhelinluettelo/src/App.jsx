@@ -11,6 +11,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [namesFilter, setFilter] = useState('')
   const [displayMessage, setDisplayMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
   
 
   useEffect(() => {
@@ -31,23 +32,30 @@ const App = () => {
           .then(changedData => {
             console.log('number changed successfully:', changedData)
             setPersons(persons.map((person) => person.id === changedData.id ? changedData : person))
-            }
-          )
-          .catch(error => console.error('Error in changing the number in:', error))
+            })
+          .catch(error => {
+            setErrorMessage(`${error} happened while trying to change the number of the entry named ${newName}.`)
+            setTimeout(() => {
+              setErrorMessage(null)
+              }, 5000)
+            })
       }
     }
     else {
       dbHandling
-      .create({name: newName, number: newNumber})
-      .then(addedPerson => {
-        setPersons(persons.concat(addedPerson))
-        setDisplayMessage(`${addedPerson.name} successfully added to phonebook`)
-        setTimeout(() => {
-          setDisplayMessage(null)
-          }, 5000)
-        }
-      )
-      .catch(error => console.error('Error adding person', error))
+        .create({name: newName, number: newNumber})
+        .then(addedPerson => {
+          setPersons(persons.concat(addedPerson))
+          setDisplayMessage(`${addedPerson.name} successfully added to phonebook`)
+          setTimeout(() => {
+            setDisplayMessage(null)
+            }, 5000)})
+        .catch(error => {
+              setErrorMessage(`${error} happened while trying to add the person ${newName} to phonebook.`)
+              setTimeout(() => {
+                setErrorMessage(null)
+                }, 5000)
+              })
     }
 
     setNewName('')
@@ -71,7 +79,8 @@ const App = () => {
     <div>
       <h1>Phonebook</h1>
       <AddPerson addPerson={addPerson} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange}></AddPerson>
-      <Notification message={displayMessage}/>
+      <Notification type={"confirm"} message={displayMessage}/>
+      <Notification type={"error"} message={errorMessage}/>
       <PhonebookFilter namesFilter={namesFilter} handleFilterChange={handleFilterChange}></PhonebookFilter>
       <PhonebookPeople namesFilter={namesFilter} persons={persons} setPersons={setPersons}></PhonebookPeople>
     </div>
