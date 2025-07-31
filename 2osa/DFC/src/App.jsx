@@ -6,6 +6,7 @@ function App() {
   const [search, setSearch] = useState('')
   const [countries, setCountries] = useState([])
 
+
   useEffect(() => {
     dbTools.getAll()
       .then(data => setCountries(data))
@@ -18,6 +19,7 @@ function App() {
   const handleButtonClick = (name) => {
     setSearch(name)
   }
+
 
   return (
       <div>

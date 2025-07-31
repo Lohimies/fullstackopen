@@ -1,6 +1,6 @@
-import React from 'react'
+import WeatherDisplay from "./WeatherDisplay"
 
-const CountryDisplay = ({country}) => {
+const CountryDisplay = ({ country }) => {
   return (
     <div>
       <h1>{country.name.common}</h1>
@@ -13,6 +13,8 @@ const CountryDisplay = ({country}) => {
         )}
       </ul>
       <img src={`${country.flags.png}`}></img>
+      
+      <WeatherDisplay country={country}/>
     </div>
   )
 }
