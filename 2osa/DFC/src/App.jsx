@@ -15,10 +15,14 @@ function App() {
     setSearch(event.target.value)
   }
 
+  const handleButtonClick = (name) => {
+    setSearch(name)
+  }
+
   return (
       <div>
        <input key={"countrySearchbar"} onChange={handleSearchChange}></input>
-       <ShowCountries searchFilter={search} countries={countries}></ShowCountries>
+       <ShowCountries searchFilter={search} countries={countries} handleButtonClick={handleButtonClick}></ShowCountries>
       </div>
   )
 }

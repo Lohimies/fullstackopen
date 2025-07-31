@@ -1,7 +1,7 @@
 import React from 'react'
 import CountryDisplay from './CountryDisplay'
 
-const ShowCountries = ({searchFilter, countries}) => {
+const ShowCountries = ({searchFilter, countries, handleButtonClick}) => {
   const filteredCountries = countries.filter((country) => (country.name.common).toLowerCase().includes(searchFilter.toLowerCase()))
 
   if (filteredCountries.length > 10) {
@@ -15,7 +15,7 @@ const ShowCountries = ({searchFilter, countries}) => {
         <h3>Countries found:</h3>
         <ul>
           {filteredCountries.map((country) => 
-            <li key={country.name.common}>{country.name.common}</li>
+            <li key={country.name.common}>{country.name.common} <button onClick={() => handleButtonClick(country.name.common)}>Show</button></li>
           )}
         </ul>
       </div>
