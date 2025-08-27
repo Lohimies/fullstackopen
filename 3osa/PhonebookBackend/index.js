@@ -1,5 +1,7 @@
+require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
+const Person = require('./models/phonebookEntry')
 
 const app = express()
 app.use(express.json())
@@ -16,49 +18,29 @@ morgan.token('body', (req, res) => {
 
 app.use(morgan(':method :url :status :response-time ms :req[content-length] :res[content-length] :body'));
 
-let personData = [
-    { 
-      "id": "1",
-      "name": "Arto Hellas", 
-      "number": "040-123456"
-    },
-    { 
-      "id": "2",
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523"
-    },
-    { 
-      "id": "3",
-      "name": "Dan Abramov", 
-      "number": "12-43-234345"
-    },
-    { 
-      "id": "4",
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122"
-    }
-]
-
 app.get('/api/persons', (request, response) => {
-  response.json(personData)
+  Person.find({}).then(notes => {
+    response.json(notes)
+  })
 })
 
 app.get('/info', (request, response) => {
-  const numberOfPersons = personData.length
   const time = new Date()
 
-  response.send(`<div><p>Phonebook has info for ${numberOfPersons} persons</p><p>${time}</p></div>`)
+  Person.find({}).then(
+    notes => {
+      response.send(`<div><p>Phonebook has info for ${notes.length} persons</p><p>${time}</p></div>`)
+    }
+  )
 })
 
+//Not finished. Returns an empty list if no matching id is not found. With mongoDB id is an object so this will be likely.
 app.get('/api/persons/:id', (request, response) => {
   const id = request.params.id
-  const person = personData.find(person => person.id === id)
-  
-  if (person) {
+  Person.find({id: id}).then(person => 
     response.json(person)
-  } else {
-    response.status(404).end()
-  }
+  )
+  .catch(error => response.status(404).end())
 })
 
 app.delete('/api/persons/:id', (request, response) => {
@@ -99,7 +81,13 @@ app.post('/api/persons', (request, response) => {
   response.json(person)
 })
 
-const PORT = process.env.PORT || 3001
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint)
+
+const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
