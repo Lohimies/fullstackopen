@@ -24,6 +24,7 @@ app.get('/api/persons', (request, response) => {
   })
 })
 
+//This is a info call for the amount of entries in the database and the time the information was delivered.
 app.get('/info', (request, response) => {
   const time = new Date()
 
@@ -34,54 +35,29 @@ app.get('/info', (request, response) => {
   )
 })
 
-//Not finished. Returns an empty list if no matching id is not found. With mongoDB id is an object so this will be likely.
+//Handles the servercall for one persons id and returns it in json format.
 app.get('/api/persons/:id', (request, response) => {
-  const id = request.params.id
-  Person.find({id: id}).then(person => 
-    response.json(person)
-  )
-  .catch(error => response.status(404).end())
+  Person.findById(request.params.id)
+    .then( person => {
+      if (person) {
+        response.json(person)
+      } 
+      else {
+        response.status(404).end
+      }
+    })
+    .catch(error => {
+      console.log(error)
+      response.status(400).send({error: 'malformatted id'})
+    })
 })
 
-app.delete('/api/persons/:id', (request, response) => {
-  const id = request.params.id
-  personData = personData.filter(person => person.id !== id)
-
-  response.status(204).end()
-})
-
-/*
-app.post('/api/persons', (request, response) => {
-  const body = request.body
-
-  if (!body.name) {
-    return response.status(400).json({ 
-      error: 'Name is missing.' 
-    })
+app.delete('/api/persons/:id', (request, response, next) => {
+  Person.findByIdAndDelete(request.params.id)
+    .then(result => response.status(204).end())
+    .catch(error => next(error))
   }
-  if (!body.number) {
-    return response.status(400).json({ 
-      error: 'Number is missing.' 
-    })
-  }
-
-  if(personData.find(person => person.name === body.name)) {
-    return response.status(400).json({ 
-      error: 'Name must be unique.' 
-    })
-  }
-
-  const person = {
-    id: `${Math.floor(Math.random() * 100000)}`,
-    name: body.name,
-    number: body.number
-  }
-
-  personData = personData.concat(person)
-
-  response.json(person)
-})
-  */
+)
 
 app.post('/api/persons', (request, response) => {
   const body = request.body
