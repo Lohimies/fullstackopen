@@ -49,6 +49,7 @@ app.get('/api/persons/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
+//Handles delete requests for single entries.
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndDelete(request.params.id)
     .then(result => response.status(204).end())
@@ -56,6 +57,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
   }
 )
 
+//Handles POST requests for new entries.
 app.post('/api/persons', (request, response, next) => {
   const body = request.body
 
@@ -83,6 +85,7 @@ app.post('/api/persons', (request, response, next) => {
   })
 })
 
+//Handles change request for entries.
 app.put('/api/persons/:id', (request, response, next) => {
   const { name, number } = request.body
 
