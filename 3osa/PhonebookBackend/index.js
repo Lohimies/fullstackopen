@@ -36,7 +36,7 @@ app.get('/info', (request, response) => {
 })
 
 //Handles the servercall for one persons id and returns it in json format.
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response, next) => {
   Person.findById(request.params.id)
     .then( person => {
       if (person) {
@@ -46,10 +46,7 @@ app.get('/api/persons/:id', (request, response) => {
         response.status(404).end
       }
     })
-    .catch(error => {
-      console.log(error)
-      response.status(400).send({error: 'malformatted id'})
-    })
+    .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (request, response, next) => {
@@ -59,15 +56,21 @@ app.delete('/api/persons/:id', (request, response, next) => {
   }
 )
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
   const body = request.body
 
   if (!body.name) {
-    return response.status(400).json({ error: 'name missing' })
+    const err = new Error('name missing')
+    err.name = "ValidationError"
+    err.status = 400
+    return next(err)
   }
 
   if (!body.number) {
-    return response.status(400).json({ error: 'number missing' })
+    const err = new Error('number missing')
+    err.name = "ValidationError"
+    err.status = 400
+    return next(err)
   }
 
   const person = new Person({
@@ -85,6 +88,30 @@ const unknownEndpoint = (request, response) => {
 }
 
 app.use(unknownEndpoint)
+
+//error handler middleware
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  //CastError checks if the id sent is a valid mongoose ObjectID
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  } 
+  
+  /*
+  ValidationError is the default name for MongoDB schema validation failures but is also set as the name in POST
+  for name or number missing.
+  */
+  if (error.name === 'ValidationError') {
+    return response.status(400).send({ error: 'name or number missing from parameters' })
+  }
+
+  //Default handling if error doesn't match errors above.
+  next(error)
+}
+
+// this has to be the last loaded middleware, also all the routes should be registered before this!
+app.use(errorHandler)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
