@@ -34,7 +34,7 @@ const App = () => {
             setPersons(persons.map((person) => person.id === changedData.id ? changedData : person))
             })
           .catch(error => {
-            setErrorMessage(`${error.response.data.error} happened while trying to change the number of the entry named ${newName}.`)
+            setErrorMessage(`${error.response.data.error}`)
             setTimeout(() => {
               setErrorMessage(null)
               }, 5000)
@@ -51,7 +51,7 @@ const App = () => {
             setDisplayMessage(null)
             }, 5000)})
         .catch(error => {
-              setErrorMessage(`${error.response.data.error} happened while trying to add the person ${newName} to phonebook.`)
+              setErrorMessage(`${error.response.data.error}`)
               setTimeout(() => {
                 setErrorMessage(null)
                 }, 5000)
