@@ -61,28 +61,16 @@ app.delete('/api/persons/:id', (request, response, next) => {
 app.post('/api/persons', (request, response, next) => {
   const body = request.body
 
-  if (!body.name) {
-    const err = new Error('name missing')
-    err.name = "ValidationError"
-    err.status = 400
-    return next(err)
-  }
-
-  if (!body.number) {
-    const err = new Error('number missing')
-    err.name = "ValidationError"
-    err.status = 400
-    return next(err)
-  }
-
   const person = new Person({
     name: body.name,
     number: body.number,
   })
 
-  person.save().then(person => {
+  person.save()
+  .then(person => {
     response.json(person)
   })
+  .catch(error => next(error))
 })
 
 //Handles change request for entries.
@@ -125,7 +113,7 @@ const errorHandler = (error, request, response, next) => {
   for name or number missing.
   */
   if (error.name === 'ValidationError') {
-    return response.status(400).send({ error: 'name or number missing from parameters' })
+    return response.status(400).json({ error: error.message })
   }
 
   //Default handling if error doesn't match errors above.
