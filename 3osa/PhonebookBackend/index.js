@@ -7,16 +7,16 @@ const app = express()
 app.use(express.json())
 app.use(express.static('dist'))
 
-morgan.token('body', (req, res) => {
-  if (req.method === "POST") {
+morgan.token('body', (req) => {
+  if (req.method === 'POST') {
     return (JSON.stringify(req.body))
   }
   else {
-    return("-")
+    return('-')
   }
 })
 
-app.use(morgan(':method :url :status :response-time ms :req[content-length] :res[content-length] :body'));
+app.use(morgan(':method :url :status :response-time ms :req[content-length] :res[content-length] :body'))
 
 app.get('/api/persons', (request, response) => {
   Person.find({}).then(persons => {
@@ -41,7 +41,7 @@ app.get('/api/persons/:id', (request, response, next) => {
     .then( person => {
       if (person) {
         response.json(person)
-      } 
+      }
       else {
         response.status(404).end
       }
@@ -52,9 +52,9 @@ app.get('/api/persons/:id', (request, response, next) => {
 //Handles delete requests for single entries.
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndDelete(request.params.id)
-    .then(result => response.status(204).end())
+    .then(response.status(204).end())
     .catch(error => next(error))
-  }
+}
 )
 
 //Handles POST requests for new entries.
@@ -106,8 +106,8 @@ const errorHandler = (error, request, response, next) => {
   //CastError checks if the id sent is a valid mongoose ObjectID
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
-  } 
-  
+  }
+
   /*
   ValidationError is the default name for MongoDB schema validation failures but is also set as the name in POST
   for name or number missing.
