@@ -67,10 +67,10 @@ app.post('/api/persons', (request, response, next) => {
   })
 
   person.save()
-  .then(person => {
-    response.json(person)
-  })
-  .catch(error => next(error))
+    .then(person => {
+      response.json(person)
+    })
+    .catch(error => next(error))
 })
 
 //Handles change request for entries.
